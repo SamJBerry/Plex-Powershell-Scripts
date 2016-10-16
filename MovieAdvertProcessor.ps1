@@ -22,5 +22,8 @@ echo "Adverts removed for ${file}";
 }else
 {
 Move-Item "${DVRProcessorPath}${file}.mkv" "${DVRProcessorPath}Manual Check\";#Move to extra folder for manual checking
-echo "Manual checking removed for ${file}";
+if($oldTime -eq $null){
+echo "Original file not found";
+}
+echo "Manual checking required for ${file}";
 }
