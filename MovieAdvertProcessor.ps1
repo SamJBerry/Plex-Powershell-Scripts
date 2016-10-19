@@ -5,6 +5,7 @@ $DVRMoviesPath = "M:\DVR Movies\";#Path of folder that records DVR Movies
 $DVRProcessorPath = "M:\DVR Processor\";#Path of oflder that MCEBuddy outputs to
 $FFMPEGPath = "D:\Users\Sam\Desktop\ffmpeg\bin\";#Path of folder containning FFMEPG.exe
 $MoviesPath="M:\Movies\May Contain Adverts\";#Path to copy movies to after
+$TimeDifference = 60;
 
 
 $file=Get-ChildItem $DVRProcessorPath -Filter *.mkv -File|% {$_.BaseName}|Select -first 1; #Get filename
@@ -15,7 +16,7 @@ exit;
 $newTime = (& ${FFMPEGPath}"ffprobe.exe" -i ${DVRProcessorPath}${file}".mkv" -show_entries format=duration -v quiet -of csv="p=0") | Out-String;#Get time of encoded file
 $oldTime = (& ${FFMPEGPath}"ffprobe.exe" -i ${DVRMoviesPath}${file}"\"${file}".ts" -show_entries format=duration -v quiet -of csv="p=0") | Out-String;#Get time of unencoded file
 $timeDifference = $oldTime-$newTime;#Find difference in time
-if ($timeDifference -gt 60){
+if ($timeDifference -gt $TimeDifference){
 Move-Item "${DVRProcessorPath}${file}.mkv" "${MoviesPath}";#Move new file to Movies library
 Remove-Item "${DVRMoviesPath}${file}" -Recurse;#Remove original file
 echo "Adverts removed for ${file}";
